@@ -32,7 +32,7 @@
             event.preventDefault();
             const word = document.getElementById('wordInput').value.trim();
 
-            const config = require('./config');
+            const config = { apiKey: 'API_KEY' };
             const apiKey = config.apiKey;
             const url = 'https://api.openai.com/v1/chat/completions';
 
@@ -62,7 +62,7 @@
 
 
     </script>
-    apiKey
+  
     <i> This site is a work in progress, please DM me on IG if you experience any issues :) <i> <br>
             <a href="https://www.instagram.com/kendall.makes.stuff/">IG : kendall.makes.stuff</a>
 </body>
