@@ -1,1 +1,68 @@
-hello
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5MinCraftGen</title>
+</head>
+
+<body style="background-color:teal;">
+    test <br>
+    print("Hello World!")
+    <h1>5 Minute Crafts Idea Generator</h1>
+    <header style="margin-top: -20px;"></header>
+    Enter a word or object to be used in the prompt and press Generate (it may take a few seconds) <br>
+    <i>ex: "shoes" will make a 5 Minute Craft idea about shoes</i> <br>
+    <form id="wordForm" style="margin-top: 20px;">
+        <label for="wordInput">Enter a word:</label>
+        <input type="text" id="wordInput" name="wordInput">
+        <button type="submit" style="background-color:red;">Generate</button>
+    </form>
+    <div id="scriptOutput"></div>
+
+    <script type="text/javascript">
+
+        function displayResponse(choice) {
+            const responseArea = document.getElementById("scriptOutput");
+            responseArea.innerHTML = '';
+            const p = document.createElement('p');
+            p.textContent = choice;
+            responseArea.appendChild(p);
+        }
+
+        document.getElementById('wordForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const word = document.getElementById('wordInput').value.trim();
+
+            const config = require('./config');
+            const apiKey = config.apiKey;
+            const url = 'https://api.openai.com/v1/chat/completions';
+
+            const data = {
+                max_tokens: 500,
+                model: 'gpt-3.5-turbo',
+                messages: [{ "role": "user", "content": "Generate a very basic 5 minute craft type idea using the word " + word }]
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + apiKey
+                },
+                body: JSON.stringify(data)
+            })
+                .then(data => {
+
+                    data.json().then(data => {
+                        console.log(data.choices[0].message.content);
+                        displayResponse(data.choices[0].message.content);
+                    })
+                })
+                .catch(error => console.error('Error during fetch:', error))
+        })
+
+
+    </script>
+
+    <i> This site is a work in progress, please DM me on IG if you experience any issues :) <i> <br>
+            <a href="https://www.instagram.com/kendall.makes.stuff/">IG : kendall.makes.stuff</a>
+</body>
