@@ -1,0 +1,19 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Replace with your main branch name
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Substitute API Key
+      run: |
+        sed -i 's/YOUR_API_KEY_PLACEHOLDER/${{ secrets.API_KEY }}/g' config.example.js
+        mv config.example.js config.js
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
