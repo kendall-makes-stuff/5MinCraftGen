@@ -4,9 +4,7 @@
     <title>5MinCraftGen</title>
 </head>
 
-<body style="background-color:teal;">
-    test <br>
-    print("Hello World!")
+<body style="background-color:#33c2b6;">
     <h1>5 Minute Crafts Idea Generator</h1>
     <header style="margin-top: -20px;"></header>
     Enter a word or object to be used in the prompt and press Generate (it may take a few seconds) <br>
@@ -16,53 +14,118 @@
         <input type="text" id="wordInput" name="wordInput">
         <button type="submit" style="background-color:red;">Generate</button>
     </form>
+    
+
+    <div id="loadingText" style="display:none;">Generating text...</div> 
+    <div id="imageLoadingText" style="display:none;">Generating image...</div>
+
     <div id="scriptOutput"></div>
 
     <script type="text/javascript">
-
-        function displayResponse(choice) {
-            const responseArea = document.getElementById("scriptOutput");
-            responseArea.innerHTML = '';
-            const p = document.createElement('p');
-            p.textContent = choice;
-            responseArea.appendChild(p);
+        async function fetchApiKey() {
+            try {
+                const response = await fetch('/api/get-key');
+                const data = await response.json();
+                return data.apiKey;
+            } catch (error) {
+                console.error('Error fetching API key:', error);
+                return null;
+            }
         }
 
-        document.getElementById('wordForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const word = document.getElementById('wordInput').value.trim();
+        function displayResponse(craftIdea, imageUrl) {
+            const responseArea = document.getElementById("scriptOutput");
+            
+            if (craftIdea) {
+                const p = document.createElement('p');
+                p.textContent = craftIdea;
+                responseArea.appendChild(p);
+            }
 
-            const config = { apiKey: 'API_KEY' };
-            const apiKey = config.apiKey;
+            if (imageUrl) {
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = 'AI-generated image based on the craft idea';
+                img.style.width = '100%';  
+                img.style.height = 'auto'; 
+                responseArea.appendChild(img);
+            }
+        }
+
+        document.getElementById('wordForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            
+            const word = document.getElementById('wordInput').value.trim();
+            const responseArea = document.getElementById("scriptOutput");
+            const loadingText = document.getElementById("loadingText");
+            const imageLoadingText = document.getElementById("imageLoadingText");
+
+            responseArea.innerHTML = '';
+            loadingText.style.display = 'block';
+            imageLoadingText.style.display = 'none';
+
+            const apiKey = await fetchApiKey();
+            if (!apiKey) {
+                console.error('API key not found');
+                loadingText.style.display = 'none';
+                return;
+            }
+
             const url = 'https://api.openai.com/v1/chat/completions';
 
-            const data = {
-                max_tokens: 500,
-                model: 'gpt-3.5-turbo',
-                messages: [{ "role": "user", "content": "Generate a very basic 5 minute craft type idea using the word " + word }]
-            };
+            try {
+                const data = {
+                    max_tokens: 250,
+                    model: 'gpt-3.5-turbo',
+                    messages: [{ "role": "user", "content": "Generate a silly 5 minute craft type idea with a name for it using the word " + word }]
+                };
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + apiKey
-                },
-                body: JSON.stringify(data)
-            })
-                .then(data => {
+                const textResponse = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + apiKey
+                    },
+                    body: JSON.stringify(data)
+                });
 
-                    data.json().then(data => {
-                        console.log(data.choices[0].message.content);
-                        displayResponse(data.choices[0].message.content);
-                    })
-                })
-                .catch(error => console.error('Error during fetch:', error))
-        })
+                const textData = await textResponse.json();
+                const craftIdea = textData.choices[0].message.content;
 
+                displayResponse(craftIdea, null);
+                loadingText.style.display = 'none';
 
+                imageLoadingText.style.display = 'block';
+
+                const imageUrl = 'https://api.openai.com/v1/images/generations';
+                const imagePrompt = "Generate an image based on the craft idea: " + craftIdea;
+
+                const imageData = {
+                    prompt: imagePrompt,
+                    n: 1,
+                    size: "1024x1024"
+                };
+
+                const imageResponse = await fetch(imageUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + apiKey
+                    },
+                    body: JSON.stringify(imageData)
+                });
+
+                const imageDataJson = await imageResponse.json();
+                const generatedImageUrl = imageDataJson.data[0].url;
+
+                displayResponse(null, generatedImageUrl);
+                imageLoadingText.style.display = 'none';  
+            } catch (error) {
+                console.error('Error during fetch:', error);
+            } finally {
+                loadingText.style.display = 'none';
+                imageLoadingText.style.display = 'none';
+            }
+        });
     </script>
-  
-    <i> This site is a work in progress, please DM me on IG if you experience any issues :) <i> <br>
-            <a href="https://www.instagram.com/kendall.makes.stuff/">IG : kendall.makes.stuff</a>
 </body>
