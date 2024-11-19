@@ -52,7 +52,7 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: red;
+            background-color: rgb(255, 145, 0);
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -248,19 +248,34 @@
             audio.load();
             return audio;
         });
+        audioFiles.forEach((file, index) => {
+            fetch(file)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    audioContext.decodeAudioData(data, (buffer) => {
+                        bufferList[index] = buffer;
+                    });
+                });
+        });
     }
 
     function playAudio(index) {
         if (playingSource[index]) {
-            playingSource[index].pause();
-            playingSource[index].currentTime = 0;
+            playingSource[index].stop();
         }
+        const source = audioContext.createBufferSource();
+        source.buffer = bufferList[index];
+        source.connect(audioContext.destination);
+        source.start(0);
+        playingSource[index] = source;
+
+        // Play the audio using HTMLAudioElement to ensure it plays even if the ringer is off
         const audio = audioElements[index];
+        audio.currentTime = 0; // Reset the audio to the beginning
         audio.play();
-        playingSource[index] = audio;
 
         if (index === 8) {
-            window.audio9 = audio;
+            window.audio9 = source;
         }
     }
 
@@ -287,8 +302,7 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            window.audio9.pause();
-            window.audio9.currentTime = 0;
+            window.audio9.stop();
         }
     }
 
