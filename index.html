@@ -52,7 +52,7 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: rgb(255, 0, 191);
+            background-color: rgb(17, 0, 255);
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -232,6 +232,7 @@
     ];
 
     let currentAudioFiles = audioFiles1;
+    let audioElements = [];
 
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
@@ -242,15 +243,7 @@
 
     function loadAudioFiles(audioFiles) {
         bufferList = [];
-        audioFiles.forEach((file, index) => {
-            fetch(file)
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    audioContext.decodeAudioData(data, (buffer) => {
-                        bufferList[index] = buffer;
-                    });
-                });
-        });
+        audioElements = audioFiles.map(file => new Audio(file));
     }
 
     function playAudio(index) {
@@ -258,7 +251,7 @@
             playingSource[index].pause();
             playingSource[index].currentTime = 0;
         }
-        const audio = new Audio(currentAudioFiles[index]);
+        const audio = audioElements[index];
         audio.play();
         playingSource[index] = audio;
 
