@@ -15,9 +15,9 @@
             --image-button-padding-top: 27%;
             --image-button-padding-left: 6.5%;
             --second-image-button-padding-left: 22%;
-            --new-red-button-padding-top: 5%;
-            --new-red-button-padding-left: 10%;
-            --new-second-red-button-padding-left: 25%;
+            --new-red-button-padding-top: 17%;
+            --new-red-button-padding-left: 6.5%;
+            --new-second-red-button-padding-left: 22%;
         }
 
         html, body {
@@ -52,7 +52,7 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: rgb(229, 255, 0);
+            background-color: red;
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -232,6 +232,7 @@
     ];
 
     let currentAudioFiles = audioFiles1;
+    let audioElements = [];
 
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
@@ -242,29 +243,24 @@
 
     function loadAudioFiles(audioFiles) {
         bufferList = [];
-        audioFiles.forEach((file, index) => {
-            fetch(file)
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    audioContext.decodeAudioData(data, (buffer) => {
-                        bufferList[index] = buffer;
-                    });
-                });
+        audioElements = audioFiles.map(file => {
+            const audio = new Audio(file);
+            audio.load();
+            return audio;
         });
     }
 
     function playAudio(index) {
         if (playingSource[index]) {
-            playingSource[index].stop();
+            playingSource[index].pause();
+            playingSource[index].currentTime = 0;
         }
-        const source = audioContext.createBufferSource();
-        source.buffer = bufferList[index];
-        source.connect(audioContext.destination);
-        source.start(0);
-        playingSource[index] = source;
+        const audio = audioElements[index];
+        audio.play();
+        playingSource[index] = audio;
 
         if (index === 8) {
-            window.audio9 = source;
+            window.audio9 = audio;
         }
     }
 
@@ -291,7 +287,8 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            window.audio9.stop();
+            window.audio9.pause();
+            window.audio9.currentTime = 0;
         }
     }
 
