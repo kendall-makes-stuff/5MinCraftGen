@@ -274,7 +274,7 @@
     function playAudio(index) {
         resumeAudioContext();
         if (playingSource[index]) {
-            playingSource[index].stop();
+            fadeOutAndStop(playingSource[index]);
         }
         const source = audioContext.createBufferSource();
         source.buffer = bufferList[index];
@@ -292,10 +292,19 @@
         }
     }
 
+    function fadeOutAndStop(source) {
+        const gainNode = audioContext.createGain();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+        source.stop(audioContext.currentTime + 0.1);
+    }
+
     function stopAllAudio() {
         for (let key in playingSource) {
             if (playingSource[key]) {
-                playingSource[key].stop();
+                fadeOutAndStop(playingSource[key]);
             }
         }
         audioElements.forEach(audio => {
@@ -327,7 +336,7 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            window.audio9.stop();
+            fadeOutAndStop(window.audio9);
         }
     }
 
