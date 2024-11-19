@@ -15,6 +15,12 @@
             --image-button-padding-top: 27%;
             --image-button-padding-left: 6.5%;
             --second-image-button-padding-left: 22%;
+            --new-image-button-padding-top: 10%;
+            --new-image-button-padding-left: 6.5%;
+            --new-second-image-button-padding-left: 22%;
+            --red-button-padding-top: 5%;
+            --red-button-padding-left: 10%;
+            --second-red-button-padding-left: 25%;
         }
 
         html, body {
@@ -42,12 +48,44 @@
             z-index: 10;
         }
 
+        .red-button {
+            width: 40px;
+            height: 30px;
+            position: absolute;
+            top: var(--red-button-padding-top);
+            background-color: red;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
         #buttonImage1 {
             left: var(--image-button-padding-left);
         }
 
         #buttonImage2 {
             left: var(--second-image-button-padding-left);
+        }
+
+        #buttonImage3 {
+            top: var(--new-image-button-padding-top);
+            left: var(--new-image-button-padding-left);
+        }
+
+        #buttonImage4 {
+            top: var(--new-image-button-padding-top);
+            left: var(--new-second-image-button-padding-left);
+        }
+
+        #redButton1 {
+            top: var(--red-button-padding-top);
+            left: var(--red-button-padding-left);
+        }
+
+        #redButton2 {
+            top: var(--red-button-padding-top);
+            left: var(--second-red-button-padding-left);
         }
 
         .image {
@@ -130,8 +168,12 @@
 <body>
 
 <div class="container">
+    <button class="image-button" id="buttonImage3"></button>
+    <button class="image-button" id="buttonImage4"></button>
     <button class="image-button" id="buttonImage1"></button>
     <button class="image-button" id="buttonImage2"></button>
+    <button class="red-button" id="redButton1"></button>
+    <button class="red-button" id="redButton2"></button>
     <img id="gridImage" src="AKAI MPC 2000 TEAL.png" alt="Grid Image" class="image">
     <div class="grid-container">
         <button class="grid-item" data-audio-index="0">1</button>
@@ -175,7 +217,7 @@
     let activeTouchIds = new Set();
     let minTapInterval = 15;
 
-    const images = ['AKAI MPC 2000 TEAL.png', 'AKAI MPC 2000.png'];
+    const images = ['runaway-teal.png', 'runaway-tan.png','power-teal.png', 'power-tan.png'];
 
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
@@ -260,6 +302,22 @@
 
     document.getElementById('buttonImage2').addEventListener('click', function() {
         document.getElementById('gridImage').src = images[1];
+    });
+
+    document.getElementById('buttonImage3').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[0];
+    });
+
+    document.getElementById('buttonImage4').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[1];
+    });
+
+    document.getElementById('redButton1').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[2];
+    });
+
+    document.getElementById('redButton2').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[3];
     });
 
     document.querySelectorAll('.grid-item').forEach(button => {
