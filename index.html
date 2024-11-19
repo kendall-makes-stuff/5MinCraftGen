@@ -52,7 +52,7 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: rgb(17, 0, 255);
+            background-color: rgb(229, 255, 0);
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -232,7 +232,6 @@
     ];
 
     let currentAudioFiles = audioFiles1;
-    let audioElements = [];
 
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
@@ -243,20 +242,29 @@
 
     function loadAudioFiles(audioFiles) {
         bufferList = [];
-        audioElements = audioFiles.map(file => new Audio(file));
+        audioFiles.forEach((file, index) => {
+            fetch(file)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    audioContext.decodeAudioData(data, (buffer) => {
+                        bufferList[index] = buffer;
+                    });
+                });
+        });
     }
 
     function playAudio(index) {
         if (playingSource[index]) {
-            playingSource[index].pause();
-            playingSource[index].currentTime = 0;
+            playingSource[index].stop();
         }
-        const audio = audioElements[index];
-        audio.play();
-        playingSource[index] = audio;
+        const source = audioContext.createBufferSource();
+        source.buffer = bufferList[index];
+        source.connect(audioContext.destination);
+        source.start(0);
+        playingSource[index] = source;
 
         if (index === 8) {
-            window.audio9 = audio;
+            window.audio9 = source;
         }
     }
 
@@ -283,8 +291,7 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            window.audio9.pause();
-            window.audio9.currentTime = 0;
+            window.audio9.stop();
         }
     }
 
