@@ -52,11 +52,12 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: rgb(255, 0, 200);
+            background-color: transparent;
             border: none;
             padding: 10px;
             cursor: pointer;
             z-index: 10;
+            background-size: cover;
         }
 
         #buttonImage1 {
@@ -69,10 +70,12 @@
 
         #redButton1 {
             left: var(--new-red-button-padding-left);
+            background-image: url('button on.png');
         }
 
         #redButton2 {
             left: var(--new-second-red-button-padding-left);
+            background-image: url('button off.png');
         }
 
         .image {
@@ -171,7 +174,7 @@
         <button class="grid-item" data-audio-index="10">11</button>
         <button class="grid-item" data-audio-index="11">12</button>
         <button class="grid-item" data-audio-index="12">13</button>
-        <button class="grid-item" onclick="pauseAudio9()">Pause 9</button>
+        <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
         <button class="grid-item" onclick="openModal()">Message</button>
     </div>
 </div>
@@ -191,7 +194,7 @@
 </div>
 
 <script>
-    let audioContext;
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let bufferList = [];
     let playingSource = {};
     let activeTouchIds = new Set();
@@ -234,13 +237,6 @@
     let currentAudioFiles = audioFiles1;
     let audioElements = [];
 
-    window.addEventListener('touchstart', function() {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            loadAudioFiles(currentAudioFiles);
-        }
-    }, { passive: false });
-
     function loadAudioFiles(audioFiles) {
         bufferList = [];
         audioElements = audioFiles.map(file => {
@@ -259,7 +255,24 @@
         });
     }
 
+    function resumeAudioContext() {
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+    }
+
+    function initializeAudio() {
+        resumeAudioContext();
+        loadAudioFiles(currentAudioFiles); // Preload audio files
+        document.removeEventListener('touchstart', initializeAudio);
+        document.removeEventListener('click', initializeAudio);
+    }
+
+    document.addEventListener('touchstart', initializeAudio, { once: true });
+    document.addEventListener('click', initializeAudio, { once: true });
+
     function playAudio(index) {
+        resumeAudioContext();
         if (playingSource[index]) {
             playingSource[index].stop();
         }
@@ -277,6 +290,18 @@
         if (index === 8) {
             window.audio9 = source;
         }
+    }
+
+    function stopAllAudio() {
+        for (let key in playingSource) {
+            if (playingSource[key]) {
+                playingSource[key].stop();
+            }
+        }
+        audioElements.forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
     }
 
     function handleTouchStart(event) {
@@ -330,12 +355,13 @@
         const redButton1 = document.getElementById('redButton1');
         const redButton2 = document.getElementById('redButton2');
         if (buttonId === 'redButton1') {
-            redButton1.style.backgroundColor = "red";
-            redButton2.style.backgroundColor = "transparent";
+            redButton1.style.backgroundImage = "url('button on.png')";
+            redButton2.style.backgroundImage = "url('button off.png')";
         } else {
-            redButton1.style.backgroundColor = "transparent";
-            redButton2.style.backgroundColor = "red";
+            redButton1.style.backgroundImage = "url('button off.png')";
+            redButton2.style.backgroundImage = "url('button on.png')";
         }
+        stopAllAudio(); // Ensure all audio is stopped when switching audio files
     }
 
     document.querySelectorAll('.grid-item').forEach(button => {
