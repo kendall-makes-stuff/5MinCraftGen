@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MPC2000XL</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <style>
+        :root {
+            --button-size: 79px;
+            --grid-gap: 10px;
+            --grid-padding-top: 173px;
+            --grid-padding-left: 0px;
+            --image-button-padding-top: 27%;
+            --image-button-padding-left: 6.5%;
+            --second-image-button-padding-left: 22%;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .image-button {
+            width: 40px;
+            height: 30px;
+            position: absolute;
+            top: var(--image-button-padding-top);
+            background-color: transparent;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        #buttonImage1 {
+            left: var(--image-button-padding-left);
+        }
+
+        #buttonImage2 {
+            left: var(--second-image-button-padding-left);
+        }
+
+        .image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, var(--button-size));
+            grid-template-rows: repeat(4, var(--button-size));
+            gap: var(--grid-gap);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding-top: var(--grid-padding-top);
+            padding-left: var(--grid-padding-left);
+            box-sizing: border-box;
+        }
+
+        .grid-item {
+            text-align: center;
+            font-size: 20px;
+            cursor: pointer;
+            background: transparent;
+            opacity: 0.25;
+            border: none;
+            color: transparent;
+            width: var(--button-size);
+            height: var(--button-size);
+        }
+
+        .modal {
+    display: none; 
+    position: fixed;
+    z-index: 150; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #790014d8; 
+}
+
+.modal-content {
+    background-color: rgb(91, 172, 156);
+    border: 10px solid goldenrod;
+    font-family: Cambria;
+    padding: 5px;
+    width: 225px;
+    height: 225px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    line-height: 1.7; 
+}
+
+.close-button {
+    background-color: #c50021;
+    color: white;
+    font-family: Cambria;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    font-size: 9px;
+    margin-top: 5px; 
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="image-button" id="buttonImage1"></button>
+    <button class="image-button" id="buttonImage2"></button>
+    <img id="gridImage" src="AKAI MPC 2000 TEAL.png" alt="Grid Image" class="image">
+    <div class="grid-container">
+        <button class="grid-item" data-audio-index="0">1</button>
+        <button class="grid-item" data-audio-index="1">2</button>
+        <button class="grid-item" data-audio-index="2">3</button>
+        <button class="grid-item" data-audio-index="3">4</button>
+        <button class="grid-item" data-audio-index="4">5</button>
+        <button class="grid-item" data-audio-index="5">6</button>
+        <button class="grid-item" data-audio-index="6">7</button>
+        <button class="grid-item" data-audio-index="7">8</button>
+        <button class="grid-item" data-audio-index="8">9</button>
+        <button class="grid-item" data-audio-index="9">10</button>
+        <button class="grid-item" data-audio-index="10">11</button>
+        <button class="grid-item" data-audio-index="11">12</button>
+        <button class="grid-item" data-audio-index="12">13</button>
+        <button class="grid-item" onclick="pauseAudio9()">Pause 9</button>
+        <button class="grid-item" onclick="openModal()">Message</button>
+
+    </div>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p>
+            Switch skins with TAN/TEAL<br>
+            Turn Silent Mode OFF<br>
+            Make sure your zoom is 100%<br>
+            Share > Add to homescreen<br>
+            Questions/Feedback?<br>
+            DM <a href="https://www.instagram.com/kendall.makes.stuff" target="_blank" style="color: blue; text-decoration: underline;">kendall.makes.stuff</a> on IG
+        </p>
+        <button class="close-button" onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+
+<script>
+    let audioContext;
+    let bufferList = [];
+    let playingSource = {};
+    let activeTouchIds = new Set();
+    let minTapInterval = 15;
+
+    const images = ['AKAI MPC 2000 TEAL.png', 'AKAI MPC 2000.png'];
+
+    window.addEventListener('touchstart', function() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            loadAudioFiles();
+        }
+    }, { passive: false });
+
+    const audioFiles = [
+        'piano-1.mp3',
+        'piano-2.mp3',
+        'piano-3.mp3',
+        'piano-4.mp3',
+        'piano-5.mp3',
+        'piano-6.mp3',
+        'piano-7.mp3',
+        'piano-8.mp3',
+        'Instrumental-loop.mp3',
+        'Look At Cha.mp3',
+        'Ladies & Gentlemen Sample.mp3',
+        'Beautiful Stars.mp3',
+        'Hey!.mp3'
+    ];
+
+    function loadAudioFiles() {
+        audioFiles.forEach((file, index) => {
+            fetch(file)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    audioContext.decodeAudioData(data, (buffer) => {
+                        bufferList[index] = buffer;
+                    });
+                });
+        });
+    }
+
+    function playAudio(index) {
+        if (playingSource[index]) {
+            playingSource[index].stop();
+        }
+        const source = audioContext.createBufferSource();
+        source.buffer = bufferList[index];
+        source.connect(audioContext.destination);
+        source.start(0);
+        playingSource[index] = source;
+
+        if (index === 8) {
+            window.audio9 = source;
+        }
+    }
+
+    function handleTouchStart(event) {
+        const touches = event.changedTouches;
+        for (let i = 0; i < touches.length; i++) {
+            const touch = touches[i];
+            activeTouchIds.add(touch.identifier);
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.classList.contains('grid-item')) {
+                const audioIndex = target.getAttribute('data-audio-index');
+                playAudio(parseInt(audioIndex));
+            }
+        }
+    }
+
+    function handleTouchEnd(event) {
+        const touches = event.changedTouches;
+        for (let i = 0; i < touches.length; i++) {
+            const touch = touches[i];
+            activeTouchIds.delete(touch.identifier);
+        }
+    }
+
+    function pauseAudio9() {
+        if (window.audio9) {
+            window.audio9.stop();
+        }
+    }
+
+    document.getElementById('buttonImage1').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[0];
+    });
+
+    document.getElementById('buttonImage2').addEventListener('click', function() {
+        document.getElementById('gridImage').src = images[1];
+    });
+
+    document.querySelectorAll('.grid-item').forEach(button => {
+        button.addEventListener('touchstart', handleTouchStart, { passive: false });
+        button.addEventListener('touchend', handleTouchEnd, { passive: false });
+    });
+
+    function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    function openVideo() {
+        window.open('vma.mp4', '_blank');
+    }
+
+    document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+    });
+
+    document.documentElement.style.touchAction = 'manipulation';
+</script>
+
+</body>
+</html>
