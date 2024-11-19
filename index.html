@@ -15,12 +15,9 @@
             --image-button-padding-top: 27%;
             --image-button-padding-left: 6.5%;
             --second-image-button-padding-left: 22%;
-            --new-image-button-padding-top: 10%;
-            --new-image-button-padding-left: 6.5%;
-            --new-second-image-button-padding-left: 22%;
-            --red-button-padding-top: 5%;
-            --red-button-padding-left: 10%;
-            --second-red-button-padding-left: 25%;
+            --new-red-button-padding-top: 5%;
+            --new-red-button-padding-left: 10%;
+            --new-second-red-button-padding-left: 25%;
         }
 
         html, body {
@@ -52,7 +49,7 @@
             width: 40px;
             height: 30px;
             position: absolute;
-            top: var(--red-button-padding-top);
+            top: var(--new-red-button-padding-top);
             background-color: red;
             border: none;
             padding: 10px;
@@ -68,24 +65,12 @@
             left: var(--second-image-button-padding-left);
         }
 
-        #buttonImage3 {
-            top: var(--new-image-button-padding-top);
-            left: var(--new-image-button-padding-left);
-        }
-
-        #buttonImage4 {
-            top: var(--new-image-button-padding-top);
-            left: var(--new-second-image-button-padding-left);
-        }
-
         #redButton1 {
-            top: var(--red-button-padding-top);
-            left: var(--red-button-padding-left);
+            left: var(--new-red-button-padding-left);
         }
 
         #redButton2 {
-            top: var(--red-button-padding-top);
-            left: var(--second-red-button-padding-left);
+            left: var(--new-second-red-button-padding-left);
         }
 
         .image {
@@ -121,60 +106,55 @@
         }
 
         .modal {
-    display: none; 
-    position: fixed;
-    z-index: 150; 
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: #790014d8; 
-}
+            display: none;
+            position: fixed;
+            z-index: 150;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: #790014d8;
+        }
 
-.modal-content {
-    background-color: rgb(91, 172, 156);
-    border: 10px solid goldenrod;
-    font-family: Cambria;
-    padding: 5px;
-    width: 225px;
-    height: 225px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    line-height: 1.7; 
-}
+        .modal-content {
+            background-color: rgb(91, 172, 156);
+            border: 10px solid goldenrod;
+            font-family: Cambria;
+            padding: 5px;
+            width: 225px;
+            height: 225px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            line-height: 1.7;
+        }
 
-.close-button {
-    background-color: #c50021;
-    color: white;
-    font-family: Cambria;
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    font-size: 9px;
-    margin-top: 5px; 
-}
-
-
-
+        .close-button {
+            background-color: #c50021;
+            color: white;
+            font-family: Cambria;
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            font-size: 9px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button class="image-button" id="buttonImage3"></button>
-    <button class="image-button" id="buttonImage4"></button>
     <button class="image-button" id="buttonImage1"></button>
     <button class="image-button" id="buttonImage2"></button>
     <button class="red-button" id="redButton1"></button>
     <button class="red-button" id="redButton2"></button>
-    <img id="gridImage" src="runaway-tan.png" alt="Grid Image" class="image">
+    <img id="gridImage" src="AKAI MPC 2000 TEAL.png" alt="Grid Image" class="image">
     <div class="grid-container">
         <button class="grid-item" data-audio-index="0">1</button>
         <button class="grid-item" data-audio-index="1">2</button>
@@ -191,7 +171,6 @@
         <button class="grid-item" data-audio-index="12">13</button>
         <button class="grid-item" onclick="pauseAudio9()">Pause 9</button>
         <button class="grid-item" onclick="openModal()">Message</button>
-
     </div>
 </div>
 
@@ -209,7 +188,6 @@
     </div>
 </div>
 
-
 <script>
     let audioContext;
     let bufferList = [];
@@ -217,16 +195,9 @@
     let activeTouchIds = new Set();
     let minTapInterval = 15;
 
-    const images = ['runaway-teal.png', 'runaway-tan.png','power-teal.png', 'power-tan.png'];
+    const images = ['AKAI MPC 2000 TEAL.png', 'AKAI MPC 2000.png'];
 
-    window.addEventListener('touchstart', function() {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            loadAudioFiles();
-        }
-    }, { passive: false });
-
-    const audioFiles = [
+    const audioFiles1 = [
         'piano-1.mp3',
         'piano-2.mp3',
         'piano-3.mp3',
@@ -242,7 +213,33 @@
         'Hey!.mp3'
     ];
 
-    function loadAudioFiles() {
+    const audioFiles2 = [
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-8.mp3',
+        'piano-1.mp3',
+        'Instrumental-loop.mp3',
+        'Look At Cha.mp3',
+        'Ladies & Gentlemen Sample.mp3',
+        'Beautiful Stars.mp3',
+        'Hey!.mp3'
+    ];
+
+    let currentAudioFiles = audioFiles1;
+
+    window.addEventListener('touchstart', function() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            loadAudioFiles(currentAudioFiles);
+        }
+    }, { passive: false });
+
+    function loadAudioFiles(audioFiles) {
+        bufferList = [];
         audioFiles.forEach((file, index) => {
             fetch(file)
                 .then(response => response.arrayBuffer())
@@ -304,21 +301,29 @@
         document.getElementById('gridImage').src = images[1];
     });
 
-    document.getElementById('buttonImage3').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[0];
-    });
-
-    document.getElementById('buttonImage4').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[1];
-    });
-
     document.getElementById('redButton1').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[2];
+        switchRedButtonAudio('redButton1');
+        currentAudioFiles = audioFiles1;
+        loadAudioFiles(currentAudioFiles);
     });
 
     document.getElementById('redButton2').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[3];
+        switchRedButtonAudio('redButton2');
+        currentAudioFiles = audioFiles2;
+        loadAudioFiles(currentAudioFiles);
     });
+
+    function switchRedButtonAudio(buttonId) {
+        const redButton1 = document.getElementById('redButton1');
+        const redButton2 = document.getElementById('redButton2');
+        if (buttonId === 'redButton1') {
+            redButton1.style.backgroundColor = "red";
+            redButton2.style.backgroundColor = "transparent";
+        } else {
+            redButton1.style.backgroundColor = "transparent";
+            redButton2.style.backgroundColor = "red";
+        }
+    }
 
     document.querySelectorAll('.grid-item').forEach(button => {
         button.addEventListener('touchstart', handleTouchStart, { passive: false });
@@ -340,13 +345,6 @@
     document.addEventListener('gesturestart', function(e) {
         e.preventDefault();
     });
-
-    document.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-    });
-
-    document.documentElement.style.touchAction = 'manipulation';
 </script>
-
 </body>
 </html>
