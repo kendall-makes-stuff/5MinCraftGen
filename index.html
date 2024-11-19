@@ -52,7 +52,7 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: red;
+            background-color: rgb(0, 255, 55);
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -257,14 +257,12 @@
         if (playingSource[index]) {
             playingSource[index].stop();
         }
-        const source = audioContext.createBufferSource();
-        source.buffer = bufferList[index];
-        source.connect(audioContext.destination);
-        source.start(0);
-        playingSource[index] = source;
+        const audio = new Audio(currentAudioFiles[index]);
+        audio.play();
+        playingSource[index] = audio;
 
         if (index === 8) {
-            window.audio9 = source;
+            window.audio9 = audio;
         }
     }
 
@@ -291,7 +289,7 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            window.audio9.stop();
+            window.audio9.pause();
         }
     }
 
