@@ -336,6 +336,14 @@
         button.addEventListener('touchend', handleTouchEnd, { passive: false });
     });
 
+    function stopAllAudio() {
+        for (let key in playingSource) {
+            if (playingSource[key]) {
+                playingSource[key].stop();
+            }
+        }
+    }
+
     function openModal() {
         document.getElementById('myModal').style.display = 'block';
     }
