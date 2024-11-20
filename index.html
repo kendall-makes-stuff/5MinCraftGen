@@ -262,6 +262,9 @@
     }
 
     function initializeAudio() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
         resumeAudioContext();
         loadAudioFiles(currentAudioFiles); // Preload audio files
         document.removeEventListener('touchstart', initializeAudio);
