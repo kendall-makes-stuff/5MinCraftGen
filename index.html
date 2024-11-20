@@ -194,7 +194,7 @@
 </div>
 
 <script>
-    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let audioContext;
     let bufferList = [];
     let playingSource = {};
     let activeTouchIds = new Set();
@@ -219,10 +219,10 @@
     ];
 
     const audioFiles2 = [
-        'Hey!.mp3',
-        'piano-8.mp3',
-        'piano-8.mp3',
-        'piano-8.mp3',
+        'ah.mp3',
+        'ey.mp3',
+        'eyey.mp3',
+        'drums.mp3',
         'piano-8.mp3',
         'piano-8.mp3',
         'piano-8.mp3',
@@ -274,7 +274,7 @@
     function playAudio(index) {
         resumeAudioContext();
         if (playingSource[index]) {
-            fadeOutAndStop(playingSource[index]);
+            playingSource[index].stop();
         }
         const source = audioContext.createBufferSource();
         source.buffer = bufferList[index];
@@ -292,19 +292,10 @@
         }
     }
 
-    function fadeOutAndStop(source) {
-        const gainNode = audioContext.createGain();
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-        source.stop(audioContext.currentTime + 0.1);
-    }
-
     function stopAllAudio() {
         for (let key in playingSource) {
             if (playingSource[key]) {
-                fadeOutAndStop(playingSource[key]);
+                playingSource[key].stop();
             }
         }
         audioElements.forEach(audio => {
@@ -336,7 +327,7 @@
 
     function pauseAudio9() {
         if (window.audio9) {
-            fadeOutAndStop(window.audio9);
+            window.audio9.stop();
         }
     }
 
@@ -393,6 +384,12 @@
     document.addEventListener('gesturestart', function(e) {
         e.preventDefault();
     });
+
+    document.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+    });
+
+    document.documentElement.style.touchAction = 'manipulation';
 </script>
 </body>
 </html>
