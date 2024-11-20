@@ -52,11 +52,12 @@
             height: 30px;
             position: absolute;
             top: var(--new-red-button-padding-top);
-            background-color: red;
+            background-color: transparent;
             border: none;
             padding: 10px;
             cursor: pointer;
             z-index: 10;
+            background-size: cover;
         }
 
         #buttonImage1 {
@@ -69,10 +70,12 @@
 
         #redButton1 {
             left: var(--new-red-button-padding-left);
+            background-image: url('button on.png');
         }
 
         #redButton2 {
             left: var(--new-second-red-button-padding-left);
+            background-image: url('button off.png');
         }
 
         .image {
@@ -319,12 +322,13 @@
         const redButton1 = document.getElementById('redButton1');
         const redButton2 = document.getElementById('redButton2');
         if (buttonId === 'redButton1') {
-            redButton1.style.backgroundColor = "red";
-            redButton2.style.backgroundColor = "transparent";
+            redButton1.style.backgroundImage = "url('button on.png')";
+            redButton2.style.backgroundImage = "url('button off.png')";
         } else {
-            redButton1.style.backgroundColor = "transparent";
-            redButton2.style.backgroundColor = "red";
+            redButton1.style.backgroundImage = "url('button off.png')";
+            redButton2.style.backgroundImage = "url('button on.png')";
         }
+        stopAllAudio(); // Ensure all audio is stopped when switching audio files
     }
 
     document.querySelectorAll('.grid-item').forEach(button => {
