@@ -174,7 +174,7 @@
         <button class="grid-item" data-audio-index="10">11</button>
         <button class="grid-item" data-audio-index="11">12</button>
         <button class="grid-item" data-audio-index="12">13</button>
-        <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
+        <button class="grid-item" onclick="stopAudio([4, 8])">Stop All</button>
         <button class="grid-item" onclick="openModal()">Message</button>
     </div>
 </div>
@@ -223,15 +223,7 @@
         'ey.mp3',
         'eyey.mp3',
         'eyeyey.mp3',
-        'drums.mp3',
-        'drum.mp3',
-        'piano-8.mp3',
-        'piano-1.mp3',
-        'Instrumental-loop.mp3',
-        'Look At Cha.mp3',
-        'Ladies & Gentlemen Sample.mp3',
-        'Beautiful Stars.mp3',
-        'Hey!.mp3'
+        'drums.mp3'
     ];
 
     let currentAudioFiles = audioFiles1;
@@ -336,12 +328,12 @@
         button.addEventListener('touchend', handleTouchEnd, { passive: false });
     });
 
-    function stopAllAudio() {
-        for (let key in playingSource) {
-            if (playingSource[key]) {
-                playingSource[key].stop();
+    function stopAudio(indices) {
+        indices.forEach(index => {
+            if (playingSource[index]) {
+                playingSource[index].stop();
             }
-        }
+        });
     }
 
     function openModal() {
