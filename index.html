@@ -228,6 +228,12 @@
 
     let currentAudioFiles = audioFiles1;
 
+    window.addEventListener('load', function() {
+        document.getElementById('gridImage').src = images[0];
+        document.getElementById('redButtonImage2').src = images[3];
+        document.getElementById('redButtonImage2').style.display = 'block';
+    });
+
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -298,14 +304,14 @@
         switchRedButtonAudio('redButton1');
         currentAudioFiles = audioFiles1;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage1', images[3]);
+        showRedButtonImage('redButtonImage1', images[2]);
     });
 
     document.getElementById('redButton2').addEventListener('click', function() {
         switchRedButtonAudio('redButton2');
         currentAudioFiles = audioFiles2;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage2', images[2]);
+        showRedButtonImage('redButtonImage2', images[3]);
     });
 
     function switchRedButtonAudio(buttonId) {
