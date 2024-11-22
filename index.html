@@ -175,6 +175,7 @@
         <button class="grid-item" data-audio-index="12">13</button>
         <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
         <button class="grid-item" onclick="openModal()">Message</button>
+        <button class="grid-item" onclick="stopSelectedAudio()">Stop Selected</button>
     </div>
     <button class="image-button" id="buttonImage1"></button>
     <button class="image-button" id="buttonImage2"></button>
@@ -366,6 +367,15 @@
                 playingSource[key].stop();
             }
         }
+    }
+
+    function stopSelectedAudio() {
+        const indicesToStop = [4, 8]; // Indices for buttons 5 and 9
+        indicesToStop.forEach(index => {
+            if (playingSource[index]) {
+                playingSource[index].stop();
+            }
+        });
     }
 
     function openModal() {
