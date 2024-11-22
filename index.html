@@ -200,7 +200,7 @@
     let playingSource = {};
     let activeTouchIds = new Set();
 
-    const images = ['TAN.png', 'TEAL.png', 'POWERTXT.png', 'RUNAWAYTXT.png'];
+    const images = ['TAN.png', 'TEAL.png', 'RUNAWAYTXT.png', 'POWERTXT.png'];
 
     const audioFiles1 = [
         'piano-1.mp3',
@@ -232,7 +232,7 @@
         document.getElementById('gridImage').src = images[0];
         document.getElementById('overlayImage1').src = images[0];
         document.getElementById('overlayImage1').style.display = 'block';
-        document.getElementById('redButtonImage2').src = images[3];
+        document.getElementById('redButtonImage2').src = images[2]; // Change index to 2 for RUNAWAYTXT.png
         document.getElementById('redButtonImage2').style.display = 'block';
     });
 
