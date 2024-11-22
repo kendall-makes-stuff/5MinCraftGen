@@ -75,7 +75,7 @@
 
         #redButton2 {
             left: var(--new-second-red-button-padding-left);
-            background-image: url('button on.png');
+            background-image: url('button off.png');
         }
 
         .image {
@@ -174,7 +174,7 @@
         <button class="grid-item" data-audio-index="10">11</button>
         <button class="grid-item" data-audio-index="11">12</button>
         <button class="grid-item" data-audio-index="12">13</button>
-        <button class="grid-item" onclick="stopAudio([4, 8])">Stop All</button>
+        <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
         <button class="grid-item" onclick="openModal()">Message</button>
     </div>
 </div>
@@ -328,12 +328,12 @@
         button.addEventListener('touchend', handleTouchEnd, { passive: false });
     });
 
-    function stopAudio(indices) {
-        indices.forEach(index => {
-            if (playingSource[index]) {
-                playingSource[index].stop();
+    function stopAllAudio() {
+        for (let key in playingSource) {
+            if (playingSource[key]) {
+                playingSource[key].stop();
             }
-        });
+        }
     }
 
     function openModal() {
