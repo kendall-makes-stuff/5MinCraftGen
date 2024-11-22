@@ -15,9 +15,9 @@
             --image-button-padding-top: 28.5%;
             --image-button-padding-left: 6.333%;
             --second-image-button-padding-left: 21.85%;
-            --new-red-button-padding-top: 20%;
-            --new-red-button-padding-left: 6.333%;
-            --new-second-red-button-padding-left: 21.85%;
+            --new-text-button-padding-top: 20%;
+            --new-text-button-padding-left: 6.333%;
+            --new-second-text-button-padding-left: 21.85%;
         }
 
         html, body {
@@ -41,7 +41,7 @@
             object-fit: contain;
         }
 
-        .overlay-image, .red-button-image {
+        .overlay-image, .overlay-text {
             position: absolute;
             top: 0;
             left: 0;
@@ -78,7 +78,7 @@
             touch-action: manipulation;
         }
 
-        .image-button, .red-button {
+        .image-button, .text-button {
             width: 40px;
             height: 30px;
             position: absolute;
@@ -99,14 +99,14 @@
             left: var(--second-image-button-padding-left);
         }
 
-        #redButton1 {
-            top: var(--new-red-button-padding-top);
-            left: var(--new-red-button-padding-left);
+        #textButton1 {
+            top: var(--new-text-button-padding-top);
+            left: var(--new-text-button-padding-left);
         }
 
-        #redButton2 {
-            top: var(--new-red-button-padding-top);
-            left: var(--new-second-red-button-padding-left);
+        #textButton2 {
+            top: var(--new-text-button-padding-top);
+            left: var(--new-second-text-button-padding-left);
         }
 
         .modal {
@@ -157,8 +157,8 @@
     <img id="gridImage" src="TAN.png" alt="Grid Image" class="image">
     <img id="overlayImage1" class="overlay-image" src="" alt="Overlay Image 1">
     <img id="overlayImage2" class="overlay-image" src="" alt="Overlay Image 2">
-    <img id="redButtonImage1" class="red-button-image" src="POWERTXT.png" alt="Red Button Image 1">
-    <img id="redButtonImage2" class="red-button-image" src="RUNAWAYTXT.png" alt="Red Button Image 2">
+    <img id="textButtonImage1" class="overlay-text" src="POWERTXT.png" alt="Text Button Image 1">
+    <img id="textButtonImage2" class="overlay-text" src="RUNAWAYTXT.png" alt="Text Button Image 2">
     <div class="grid-container">
         <button class="grid-item" data-audio-index="0">1</button>
         <button class="grid-item" data-audio-index="1">2</button>
@@ -179,8 +179,8 @@
     </div>
     <button class="image-button" id="buttonImage1"></button>
     <button class="image-button" id="buttonImage2"></button>
-    <button class="red-button" id="redButton1"></button>
-    <button class="red-button" id="redButton2"></button>
+    <button class="text-button" id="textButton1"></button>
+    <button class="text-button" id="textButton2"></button>
 </div>
 
 <div id="myModal" class="modal">
@@ -236,8 +236,8 @@
         document.getElementById('gridImage').src = '';
         document.getElementById('overlayImage1').src = images[0];
         document.getElementById('overlayImage1').style.display = 'block';
-        document.getElementById('redButtonImage2').src = images[2];
-        document.getElementById('redButtonImage2').style.display = 'block';
+        document.getElementById('textButtonImage2').src = images[2];
+        document.getElementById('textButtonImage2').style.display = 'block';
     });
 
     window.addEventListener('touchstart', function() {
@@ -306,32 +306,32 @@
         showOverlayImage('overlayImage2', images[1]);
     });
 
-    document.getElementById('redButton1').addEventListener('click', function() {
-        switchRedButtonAudio('redButton1');
+    document.getElementById('textButton1').addEventListener('click', function() {
+        switchTextButtonAudio('textButton1');
         currentAudioFiles = audioFiles1;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage1', images[2]);
+        showtextButtonImage('textButtonImage1', images[2]);
     });
 
-    document.getElementById('redButton2').addEventListener('click', function() {
-        switchRedButtonAudio('redButton2');
+    document.getElementById('textButton2').addEventListener('click', function() {
+        switchTextButtonAudio('textButton2');
         currentAudioFiles = audioFiles2;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage2', images[3]);
+        showtextButtonImage('textButtonImage2', images[3]);
     });
 
-    function switchRedButtonAudio(buttonId) {
-        const redButton1 = document.getElementById('redButton1');
-        const redButton2 = document.getElementById('redButton2');
-        if (buttonId === 'redButton1') {
-            redButton1.style.backgroundImage = "none";
-            redButton2.style.backgroundImage = "none";
+    function switchTextButtonAudio(buttonId) {
+        const textButton1 = document.getElementById('textButton1');
+        const textButton2 = document.getElementById('textButton2');
+        if (buttonId === 'textButton1') {
+            textButton1.style.backgroundImage = "none";
+            textButton2.style.backgroundImage = "none";
         } else {
-            redButton1.style.backgroundImage = "none";
-            redButton2.style.backgroundImage = "none";
+            textButton1.style.backgroundImage = "none";
+            textButton2.style.backgroundImage = "none";
         }
         stopAllAudio();
-        hideRedButtonImages();
+        hidetextButtonImages();
     }
 
     function showOverlayImage(imageId, imageSrc) {
@@ -345,15 +345,15 @@
         document.getElementById('overlayImage2').style.display = 'none';
     }
 
-    function showRedButtonImage(imageId, imageSrc) {
-        const redButtonImage = document.getElementById(imageId);
-        redButtonImage.src = imageSrc;
-        redButtonImage.style.display = 'block';
+    function showtextButtonImage(imageId, imageSrc) {
+        const textButtonImage = document.getElementById(imageId);
+        textButtonImage.src = imageSrc;
+        textButtonImage.style.display = 'block';
     }
 
-    function hideRedButtonImages() {
-        document.getElementById('redButtonImage1').style.display = 'none';
-        document.getElementById('redButtonImage2').style.display = 'none';
+    function hidetextButtonImages() {
+        document.getElementById('textButtonImage1').style.display = 'none';
+        document.getElementById('textButtonImage2').style.display = 'none';
     }
 
     document.querySelectorAll('.grid-item').forEach(button => {
@@ -370,7 +370,7 @@
     }
 
     function stopSelectedAudio() {
-        const indicesToStop = [4, 8]; // Indices for buttons 5 and 9
+        const indicesToStop = [4, 8];
         indicesToStop.forEach(index => {
             if (playingSource[index]) {
                 playingSource[index].stop();
