@@ -25,8 +25,8 @@
             padding: 0;
             overflow: hidden;
             background-color: black;
-            touch-action: manipulation; /* Prevents zooming */
-            user-select: none; /* Prevents text selection */
+            touch-action: manipulation;
+            user-select: none;
         }
 
         .container {
@@ -35,47 +35,35 @@
             height: 100%;
         }
 
-        .image-button {
+        .image-button, .red-button {
             width: 40px;
             height: 30px;
             position: absolute;
-            top: var(--image-button-padding-top);
             background-color: transparent;
             border: none;
             padding: 10px;
             cursor: pointer;
             z-index: 10;
-        }
-
-        .red-button {
-            width: 40px;
-            height: 30px;
-            position: absolute;
-            top: var(--new-red-button-padding-top);
-            background-color: transparent;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            z-index: 10;
-            background-size: cover;
         }
 
         #buttonImage1 {
+            top: var(--image-button-padding-top);
             left: var(--image-button-padding-left);
         }
 
         #buttonImage2 {
+            top: var(--image-button-padding-top);
             left: var(--second-image-button-padding-left);
         }
 
         #redButton1 {
+            top: var(--new-red-button-padding-top);
             left: var(--new-red-button-padding-left);
-            background-image: url('button on.png');
         }
 
         #redButton2 {
+            top: var(--new-red-button-padding-top);
             left: var(--new-second-red-button-padding-left);
-            background-image: url('button off.png');
         }
 
         .image {
@@ -150,16 +138,42 @@
             font-size: 9px;
             margin-top: 5px;
         }
+
+        .overlay-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+            display: none;
+        }
+
+        .red-button-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 5;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <img id="overlayImage1" class="overlay-image" src="" alt="Overlay Image 1">
+    <img id="overlayImage2" class="overlay-image" src="" alt="Overlay Image 2">
+    <img id="redButtonImage1" class="red-button-image" src="" alt="Red Button Image 1">
+    <img id="redButtonImage2" class="red-button-image" src="" alt="Red Button Image 2">
     <button class="image-button" id="buttonImage1"></button>
     <button class="image-button" id="buttonImage2"></button>
     <button class="red-button" id="redButton1"></button>
     <button class="red-button" id="redButton2"></button>
-    <img id="gridImage" src="AKAI MPC 2000 TEAL.png" alt="Grid Image" class="image">
+    <img id="gridImage" src="TAN.png" alt="Grid Image" class="image">
     <div class="grid-container">
         <button class="grid-item" data-audio-index="0">1</button>
         <button class="grid-item" data-audio-index="1">2</button>
@@ -198,9 +212,8 @@
     let bufferList = [];
     let playingSource = {};
     let activeTouchIds = new Set();
-    let minTapInterval = 15;
 
-    const images = ['AKAI MPC 2000 TEAL.png', 'AKAI MPC 2000.png'];
+    const images = ['TAN.png', 'TEAL.png', 'RUNAWAYTXT.png', 'POWERTXT.png'];
 
     const audioFiles1 = [
         'piano-1.mp3',
@@ -284,43 +297,64 @@
         }
     }
 
-    function pauseAudio9() {
-        if (window.audio9) {
-            window.audio9.stop();
-        }
-    }
-
     document.getElementById('buttonImage1').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[0];
+        hideOverlayImages();
+        showOverlayImage('overlayImage1', images[0]);
     });
 
     document.getElementById('buttonImage2').addEventListener('click', function() {
-        document.getElementById('gridImage').src = images[1];
+        hideOverlayImages();
+        showOverlayImage('overlayImage2', images[1]);
     });
 
     document.getElementById('redButton1').addEventListener('click', function() {
         switchRedButtonAudio('redButton1');
         currentAudioFiles = audioFiles1;
         loadAudioFiles(currentAudioFiles);
+        showRedButtonImage('redButtonImage1', images[2]);
     });
 
     document.getElementById('redButton2').addEventListener('click', function() {
         switchRedButtonAudio('redButton2');
         currentAudioFiles = audioFiles2;
         loadAudioFiles(currentAudioFiles);
+        showRedButtonImage('redButtonImage2', images[3]);
     });
 
     function switchRedButtonAudio(buttonId) {
         const redButton1 = document.getElementById('redButton1');
         const redButton2 = document.getElementById('redButton2');
         if (buttonId === 'redButton1') {
-            redButton1.style.backgroundImage = "url('button on.png')";
-            redButton2.style.backgroundImage = "url('button off.png')";
+            redButton1.style.backgroundImage = "none";
+            redButton2.style.backgroundImage = "none";
         } else {
-            redButton1.style.backgroundImage = "url('button off.png')";
-            redButton2.style.backgroundImage = "url('button on.png')";
+            redButton1.style.backgroundImage = "none";
+            redButton2.style.backgroundImage = "none";
         }
-        stopAllAudio(); // Ensure all audio is stopped when switching audio files
+        stopAllAudio();
+        hideRedButtonImages();
+    }
+
+    function showOverlayImage(imageId, imageSrc) {
+        const overlayImage = document.getElementById(imageId);
+        overlayImage.src = imageSrc;
+        overlayImage.style.display = 'block';
+    }
+
+    function hideOverlayImages() {
+        document.getElementById('overlayImage1').style.display = 'none';
+        document.getElementById('overlayImage2').style.display = 'none';
+    }
+
+    function showRedButtonImage(imageId, imageSrc) {
+        const redButtonImage = document.getElementById(imageId);
+        redButtonImage.src = imageSrc;
+        redButtonImage.style.display = 'block';
+    }
+
+    function hideRedButtonImages() {
+        document.getElementById('redButtonImage1').style.display = 'none';
+        document.getElementById('redButtonImage2').style.display = 'none';
     }
 
     document.querySelectorAll('.grid-item').forEach(button => {
@@ -342,10 +376,6 @@
 
     function closeModal() {
         document.getElementById('myModal').style.display = 'none';
-    }
-
-    function openVideo() {
-        window.open('vma.mp4', '_blank');
     }
 
     document.addEventListener('gesturestart', function(e) {
