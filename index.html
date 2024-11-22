@@ -35,41 +35,20 @@
             height: 100%;
         }
 
-        .image-button, .red-button {
-            width: 40px;
-            height: 30px;
-            position: absolute;
-            background-color: transparent;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        #buttonImage1 {
-            top: var(--image-button-padding-top);
-            left: var(--image-button-padding-left);
-        }
-
-        #buttonImage2 {
-            top: var(--image-button-padding-top);
-            left: var(--second-image-button-padding-left);
-        }
-
-        #redButton1 {
-            top: var(--new-red-button-padding-top);
-            left: var(--new-red-button-padding-left);
-        }
-
-        #redButton2 {
-            top: var(--new-red-button-padding-top);
-            left: var(--new-second-red-button-padding-left);
-        }
-
         .image {
             width: 100%;
             height: 100%;
             object-fit: contain;
+        }
+
+        .overlay-image, .red-button-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
         }
 
         .grid-container {
@@ -96,6 +75,36 @@
             color: transparent;
             width: var(--button-size);
             height: var(--button-size);
+        }
+
+        .image-button, .red-button {
+            width: 40px;
+            height: 30px;
+            position: absolute;
+            background-color: transparent;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #buttonImage1 {
+            top: var(--image-button-padding-top);
+            left: var(--image-button-padding-left);
+        }
+
+        #buttonImage2 {
+            top: var(--image-button-padding-top);
+            left: var(--second-image-button-padding-left);
+        }
+
+        #redButton1 {
+            top: var(--new-red-button-padding-top);
+            left: var(--new-red-button-padding-left);
+        }
+
+        #redButton2 {
+            top: var(--new-red-button-padding-top);
+            left: var(--new-second-red-button-padding-left);
         }
 
         .modal {
@@ -138,42 +147,16 @@
             font-size: 9px;
             margin-top: 5px;
         }
-
-        .overlay-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            z-index: 1;
-            display: none;
-        }
-
-        .red-button-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            z-index: 5;
-            display: none;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <img id="gridImage" src="TAN.png" alt="Grid Image" class="image">
     <img id="overlayImage1" class="overlay-image" src="" alt="Overlay Image 1">
     <img id="overlayImage2" class="overlay-image" src="" alt="Overlay Image 2">
-    <img id="redButtonImage1" class="red-button-image" src="" alt="Red Button Image 1">
-    <img id="redButtonImage2" class="red-button-image" src="" alt="Red Button Image 2">
-    <button class="image-button" id="buttonImage1"></button>
-    <button class="image-button" id="buttonImage2"></button>
-    <button class="red-button" id="redButton1"></button>
-    <button class="red-button" id="redButton2"></button>
-    <img id="gridImage" src="TAN.png" alt="Grid Image" class="image">
+    <img id="redButtonImage1" class="red-button-image" src="POWERTXT.png" alt="Red Button Image 1">
+    <img id="redButtonImage2" class="red-button-image" src="RUNAWAYTXT.png" alt="Red Button Image 2">
     <div class="grid-container">
         <button class="grid-item" data-audio-index="0">1</button>
         <button class="grid-item" data-audio-index="1">2</button>
@@ -191,6 +174,10 @@
         <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
         <button class="grid-item" onclick="openModal()">Message</button>
     </div>
+    <button class="image-button" id="buttonImage1"></button>
+    <button class="image-button" id="buttonImage2"></button>
+    <button class="red-button" id="redButton1"></button>
+    <button class="red-button" id="redButton2"></button>
 </div>
 
 <div id="myModal" class="modal">
@@ -311,14 +298,14 @@
         switchRedButtonAudio('redButton1');
         currentAudioFiles = audioFiles1;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage1', images[2]);
+        showRedButtonImage('redButtonImage1', images[3]);
     });
 
     document.getElementById('redButton2').addEventListener('click', function() {
         switchRedButtonAudio('redButton2');
         currentAudioFiles = audioFiles2;
         loadAudioFiles(currentAudioFiles);
-        showRedButtonImage('redButtonImage2', images[3]);
+        showRedButtonImage('redButtonImage2', images[2]);
     });
 
     function switchRedButtonAudio(buttonId) {
