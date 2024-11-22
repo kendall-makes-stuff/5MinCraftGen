@@ -243,7 +243,9 @@
     window.addEventListener('touchstart', function() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            loadAudioFiles(currentAudioFiles);
+            audioContext.resume().then(() => {
+                loadAudioFiles(currentAudioFiles);
+            });
         }
     }, { passive: false });
 
