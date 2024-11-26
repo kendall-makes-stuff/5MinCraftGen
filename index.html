@@ -1,396 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <title>MPC2000XL</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    <style>
-        :root {
-            --button-size: 79px;
-            --grid-gap: 10px;
-            --grid-padding-top: 175px;
-            --grid-padding-left: 0px;
-            --image-button-padding-top: 28.5%;
-            --image-button-padding-left: 6.333%;
-            --second-image-button-padding-left: 21.85%;
-            --new-text-button-padding-top: 20%;
-            --new-text-button-padding-left: 6.333%;
-            --new-second-text-button-padding-left: 21.85%;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: black;
-            touch-action: manipulation;
-            user-select: none;
-        }
-
-        .container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .overlay-image, .overlay-text {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: none;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(4, var(--button-size));
-            grid-template-rows: repeat(4, var(--button-size));
-            gap: var(--grid-gap);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding-top: var(--grid-padding-top);
-            padding-left: var(--grid-padding-left);
-            box-sizing: border-box;
-        }
-
-        .grid-item {
-            text-align: center;
-            font-size: 20px;
-            cursor: pointer;
-            background: transparent;
-            opacity: 0.25;
-            border: none;
-            color: transparent;
-            width: var(--button-size);
-            height: var(--button-size);
-            touch-action: manipulation;
-        }
-
-        .image-button, .text-button {
-            width: 40px;
-            height: 30px;
-            position: absolute;
-            background-color: transparent;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        #buttonImage1 {
-            top: var(--image-button-padding-top);
-            left: var(--image-button-padding-left);
-        }
-
-        #buttonImage2 {
-            top: var(--image-button-padding-top);
-            left: var(--second-image-button-padding-left);
-        }
-
-        #textButton1 {
-            top: var(--new-text-button-padding-top);
-            left: var(--new-text-button-padding-left);
-        }
-
-        #textButton2 {
-            top: var(--new-text-button-padding-top);
-            left: var(--new-second-text-button-padding-left);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 150;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: #790014d8;
-        }
-
-        .modal-content {
-            background-color: rgb(91, 172, 156);
-            border: 10px solid goldenrod;
-            font-family: Cambria;
-            padding: 5px;
-            width: 225px;
-            height: 225px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            line-height: 1.5;
-        }
-
-        .close-button {
-            background-color: #c50021;
-            color: white;
-            font-family: Cambria;
-            padding: 5px 10px;
-            cursor: pointer;
-            border: none;
-            font-size: 8px;
-            margin-top: 5px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5MinCraftGen</title>
 </head>
-<body>
 
-<div class="container">
-    <img id="gridImage" src="TAN.png" alt="Grid Image" class="image">
-    <img id="overlayImage1" class="overlay-image" src="" alt="Overlay Image 1">
-    <img id="overlayImage2" class="overlay-image" src="" alt="Overlay Image 2">
-    <img id="textButtonImage1" class="overlay-text" src="POWERTXT.png" alt="Text Button Image 1">
-    <img id="textButtonImage2" class="overlay-text" src="RUNAWAYTXT.png" alt="Text Button Image 2">
-    <div class="grid-container">
-        <button class="grid-item" data-audio-index="0">1</button>
-        <button class="grid-item" data-audio-index="1">2</button>
-        <button class="grid-item" data-audio-index="2">3</button>
-        <button class="grid-item" data-audio-index="3">4</button>
-        <button class="grid-item" data-audio-index="4">5</button>
-        <button class="grid-item" data-audio-index="5">6</button>
-        <button class="grid-item" data-audio-index="6">7</button>
-        <button class="grid-item" data-audio-index="7">8</button>
-        <button class="grid-item" data-audio-index="8">9</button>
-        <button class="grid-item" data-audio-index="9">10</button>
-        <button class="grid-item" data-audio-index="10">11</button>
-        <button class="grid-item" data-audio-index="11">12</button>
-        <button class="grid-item" data-audio-index="12">13</button>
-        <button class="grid-item" onclick="stopAllAudio()">Stop All</button>
-        <button class="grid-item" onclick="openModal()">Message</button>
-        <button class="grid-item" onclick="stopSelectedAudio()">Stop Selected</button>
-    </div>
-    <button class="image-button" id="buttonImage1"></button>
-    <button class="image-button" id="buttonImage2"></button>
-    <button class="text-button" id="textButton1"></button>
-    <button class="text-button" id="textButton2"></button>
-</div>
+<body style="background-color:#33c2b6;">
+    <h1>5 Minute Crafts Idea Generator</h1>
+    <header style="margin-top: -20px;"></header>
+    Enter a word or object to be used in the prompt and press Generate (it may take a few seconds) <br>
+    <i>ex: "shoes" will make a 5 Minute Craft idea about shoes</i> <br>
+    <form id="wordForm" style="margin-top: 20px;">
+        <label for="wordInput">Enter a word:</label>
+        <input type="text" id="wordInput" name="wordInput">
+        <button type="submit" style="background-color:red;">Generate</button>
+    </form>
+    
 
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <p>
-            Play Runaway & POWER<br>
-            Switch skins with TAN/TEAL<br>
-            Turn Silent Mode OFF<br>
-            Make sure zoom is at 100%<br>
-            Share > Add to homescreen<br>
-            Questions/Feedback?<br>
-            DM <a href="https://www.instagram.com/kendall.makes.stuff" target="_blank" style="color: blue; text-decoration: underline;">kendall.makes.stuff</a> on IG
-        </p>
-        <button class="close-button" onclick="closeModal()">OK</button>
-    </div>
-</div>
+    <div id="loadingText" style="display:none;">Generating text...</div> 
+    <div id="imageLoadingText" style="display:none;">Generating image...</div>
 
-<script>
-    let audioContext;
-    let bufferList = [];
-    let playingSource = {};
-    let activeTouchIds = new Set();
+    <div id="scriptOutput"></div>
 
-    const images = ['TAN.png', 'TEAL.png', 'RUNAWAYTXT.png', 'POWERTXT.png'];
-
-    const audioFiles1 = [
-        'piano-1.mp3',
-        'piano-2.mp3',
-        'piano-3.mp3',
-        'piano-4.mp3',
-        'piano-5.mp3',
-        'piano-6.mp3',
-        'piano-7.mp3',
-        'piano-8.mp3',
-        'Instrumental-loop.mp3',
-        'Look At Cha.mp3',
-        'Ladies & Gentlemen Sample.mp3',
-        'Beautiful Stars.mp3',
-        'Hey!.mp3'
-    ];
-
-    const audioFiles2 = [
-        'ah.mp3',
-        'ey.mp3',
-        'eyey.mp3',
-        'eyeyey.mp3',
-        'drums.mp3',
-    ];
-
-    let currentAudioFiles = audioFiles1;
-
-    window.addEventListener('load', function() {
-        document.getElementById('gridImage').src = '';
-        document.getElementById('overlayImage1').src = images[0];
-        document.getElementById('overlayImage1').style.display = 'block';
-        document.getElementById('textButtonImage2').src = images[2];
-        document.getElementById('textButtonImage2').style.display = 'block';
-    });
-
-    window.addEventListener('touchstart', function() {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            audioContext.resume().then(() => {
-                loadAudioFiles(currentAudioFiles);
-            });
+    <script type="text/javascript">
+        async function fetchApiKey() {
+            try {
+                const response = await fetch('/api/get-key');
+                const data = await response.json();
+                return data.apiKey;
+            } catch (error) {
+                console.error('Error fetching API key:', error);
+                return null;
+            }
         }
-    }, { passive: false });
 
-    function loadAudioFiles(audioFiles) {
-        bufferList = [];
-        audioFiles.forEach((file, index) => {
-            fetch(file)
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    audioContext.decodeAudioData(data, (buffer) => {
-                        bufferList[index] = buffer;
-                    });
+        function displayResponse(craftIdea, imageUrl) {
+            const responseArea = document.getElementById("scriptOutput");
+            
+            if (craftIdea) {
+                const p = document.createElement('p');
+                p.textContent = craftIdea;
+                responseArea.appendChild(p);
+            }
+
+            if (imageUrl) {
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = 'AI-generated image based on the craft idea';
+                img.style.width = '100%';  
+                img.style.height = 'auto'; 
+                responseArea.appendChild(img);
+            }
+        }
+
+        document.getElementById('wordForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            
+            const word = document.getElementById('wordInput').value.trim();
+            const responseArea = document.getElementById("scriptOutput");
+            const loadingText = document.getElementById("loadingText");
+            const imageLoadingText = document.getElementById("imageLoadingText");
+
+            responseArea.innerHTML = '';
+            loadingText.style.display = 'block';
+            imageLoadingText.style.display = 'none';
+
+            const apiKey = await fetchApiKey();
+            if (!apiKey) {
+                console.error('API key not found');
+                loadingText.style.display = 'none';
+                return;
+            }
+
+            const url = 'https://api.openai.com/v1/chat/completions';
+
+            try {
+                const data = {
+                    max_tokens: 250,
+                    model: 'gpt-3.5-turbo',
+                    messages: [{ "role": "user", "content": "Generate a silly 5 minute craft type idea with a name for it using the word " + word }]
+                };
+
+                const textResponse = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + apiKey
+                    },
+                    body: JSON.stringify(data)
                 });
-        });
-    }
 
-    function playAudio(index) {
-        if (playingSource[index]) {
-            playingSource[index].stop();
-        }
-        const source = audioContext.createBufferSource();
-        source.buffer = bufferList[index];
-        source.connect(audioContext.destination);
-        source.start(0);
-        playingSource[index] = source;
+                const textData = await textResponse.json();
+                const craftIdea = textData.choices[0].message.content;
 
-        if (index === 8) {
-            window.audio9 = source;
-        }
-    }
+                displayResponse(craftIdea, null);
+                loadingText.style.display = 'none';
 
-    function handleTouchStart(event) {
-        const touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            const touch = touches[i];
-            activeTouchIds.add(touch.identifier);
-            const target = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (target && target.classList.contains('grid-item')) {
-                const audioIndex = target.getAttribute('data-audio-index');
-                playAudio(parseInt(audioIndex));
-            }
-        }
-    }
+                imageLoadingText.style.display = 'block';
 
-    function handleTouchEnd(event) {
-        const touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            const touch = touches[i];
-            activeTouchIds.delete(touch.identifier);
-        }
-    }
+                const imageUrl = 'https://api.openai.com/v1/images/generations';
+                const imagePrompt = "Generate an image based on the craft idea: " + craftIdea;
 
-    document.getElementById('buttonImage1').addEventListener('click', function() {
-        hideOverlayImages();
-        showOverlayImage('overlayImage1', images[0]);
-    });
+                const imageData = {
+                    prompt: imagePrompt,
+                    n: 1,
+                    size: "1024x1024"
+                };
 
-    document.getElementById('buttonImage2').addEventListener('click', function() {
-        hideOverlayImages();
-        showOverlayImage('overlayImage2', images[1]);
-    });
+                const imageResponse = await fetch(imageUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + apiKey
+                    },
+                    body: JSON.stringify(imageData)
+                });
 
-    document.getElementById('textButton1').addEventListener('click', function() {
-        switchTextButtonAudio('textButton1');
-        currentAudioFiles = audioFiles1;
-        loadAudioFiles(currentAudioFiles);
-        showtextButtonImage('textButtonImage1', images[2]);
-    });
+                const imageDataJson = await imageResponse.json();
+                const generatedImageUrl = imageDataJson.data[0].url;
 
-    document.getElementById('textButton2').addEventListener('click', function() {
-        switchTextButtonAudio('textButton2');
-        currentAudioFiles = audioFiles2;
-        loadAudioFiles(currentAudioFiles);
-        showtextButtonImage('textButtonImage2', images[3]);
-    });
-
-    function switchTextButtonAudio(buttonId) {
-        const textButton1 = document.getElementById('textButton1');
-        const textButton2 = document.getElementById('textButton2');
-        if (buttonId === 'textButton1') {
-            textButton1.style.backgroundImage = "none";
-            textButton2.style.backgroundImage = "none";
-        } else {
-            textButton1.style.backgroundImage = "none";
-            textButton2.style.backgroundImage = "none";
-        }
-        stopAllAudio();
-        hidetextButtonImages();
-    }
-
-    function showOverlayImage(imageId, imageSrc) {
-        const overlayImage = document.getElementById(imageId);
-        overlayImage.src = imageSrc;
-        overlayImage.style.display = 'block';
-    }
-
-    function hideOverlayImages() {
-        document.getElementById('overlayImage1').style.display = 'none';
-        document.getElementById('overlayImage2').style.display = 'none';
-    }
-
-    function showtextButtonImage(imageId, imageSrc) {
-        const textButtonImage = document.getElementById(imageId);
-        textButtonImage.src = imageSrc;
-        textButtonImage.style.display = 'block';
-    }
-
-    function hidetextButtonImages() {
-        document.getElementById('textButtonImage1').style.display = 'none';
-        document.getElementById('textButtonImage2').style.display = 'none';
-    }
-
-    document.querySelectorAll('.grid-item').forEach(button => {
-        button.addEventListener('touchstart', handleTouchStart, { passive: false });
-        button.addEventListener('touchend', handleTouchEnd, { passive: false });
-    });
-
-    function stopAllAudio() {
-        for (let key in playingSource) {
-            if (playingSource[key]) {
-                playingSource[key].stop();
-            }
-        }
-    }
-
-    function stopSelectedAudio() {
-        const indicesToStop = [4, 8];
-        indicesToStop.forEach(index => {
-            if (playingSource[index]) {
-                playingSource[index].stop();
+                displayResponse(null, generatedImageUrl);
+                imageLoadingText.style.display = 'none';  
+            } catch (error) {
+                console.error('Error during fetch:', error);
+            } finally {
+                loadingText.style.display = 'none';
+                imageLoadingText.style.display = 'none';
             }
         });
-    }
-
-    function openModal() {
-        document.getElementById('myModal').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
-    }
-
-    document.addEventListener('gesturestart', function(e) {
-        e.preventDefault();
-    });
-</script>
+    </script>
 </body>
-</html>
